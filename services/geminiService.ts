@@ -31,16 +31,16 @@ export const generateProposalImage = async (proposalTitle: string, visualDescrip
     });
 
     // Iterate to find image part
-    // Fix: Safely access candidates and parts using optional chaining
-    const candidate = response.candidates?.[0];
-    const parts = candidate?.content?.parts;
-    
-    if (parts) {
-        for (const part of parts) {
-            if (part.inlineData) {
-                return `data:image/png;base64,${part.inlineData.data}`;
-            }
+    // Fix: Explicitly check for candidates and parts to avoid TS2532 error
+    if (response.candidates && response.candidates.length > 0) {
+      const candidate = response.candidates[0];
+      if (candidate.content && candidate.content.parts) {
+        for (const part of candidate.content.parts) {
+          if (part.inlineData && part.inlineData.data) {
+            return `data:image/png;base64,${part.inlineData.data}`;
+          }
         }
+      }
     }
     return null;
   } catch (error) {
