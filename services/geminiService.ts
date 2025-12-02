@@ -59,8 +59,10 @@ export const generateProposalImage = async (proposalTitle: string, visualDescrip
         },
       });
 
-      if (fallbackResponse.generatedImages && fallbackResponse.generatedImages.length > 0) {
-        const imageBytes = fallbackResponse.generatedImages[0].image.imageBytes;
+      // Fix: Safely access deeply nested properties to avoid TS2532
+      const imageBytes = fallbackResponse.generatedImages?.[0]?.image?.imageBytes;
+      
+      if (imageBytes) {
         return `data:image/jpeg;base64,${imageBytes}`;
       }
     } catch (fallbackError) {
