@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PROPOSALS } from '../constants';
 import { RotateCw, CheckCircle2 } from 'lucide-react';
 import { generateAiAdvice } from '../services/geminiService';
+import ReactMarkdown from 'react-markdown';
 
 const Game: React.FC = () => {
   // Flashcard State
@@ -99,11 +100,27 @@ const Game: React.FC = () => {
         </form>
 
         {chatResponse && (
-          <div className="bg-slate-50 rounded-xl p-6 border border-slate-200 animate-fade-in">
-            <h4 className="font-bold text-slate-700 mb-2 flex items-center gap-2">
+          <div className="bg-slate-50 rounded-xl p-6 border border-slate-200 animate-fade-in text-left">
+            <h4 className="font-bold text-slate-700 mb-4 flex items-center gap-2 border-b pb-2 border-slate-200">
               Gemini의 답변
             </h4>
-            <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{chatResponse}</p>
+            <div className="text-slate-700 text-sm md:text-base leading-relaxed">
+              <ReactMarkdown
+                components={{
+                  strong: ({node, ...props}) => <span className="font-bold text-slate-900" {...props} />,
+                  ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-2 mb-4" {...props} />,
+                  ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-2 mb-4" {...props} />,
+                  li: ({node, ...props}) => <li className="pl-1" {...props} />,
+                  p: ({node, ...props}) => <p className="mb-4 last:mb-0" {...props} />,
+                  h1: ({node, ...props}) => <h1 className="text-xl font-bold mt-4 mb-2 text-slate-800" {...props} />,
+                  h2: ({node, ...props}) => <h2 className="text-lg font-bold mt-3 mb-2 text-slate-800" {...props} />,
+                  h3: ({node, ...props}) => <h3 className="text-base font-bold mt-2 mb-1 text-slate-800" {...props} />,
+                  blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-blue-200 pl-4 italic my-4 text-slate-600" {...props} />,
+                }}
+              >
+                {chatResponse}
+              </ReactMarkdown>
+            </div>
           </div>
         )}
       </div>
